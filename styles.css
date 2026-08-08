@@ -1,0 +1,491 @@
+/* ============================================================
+   Soluna — 공통 스타일
+   토큰 계보: 오늘수업(oneulclass) 랜딩에서 가져온 것 = Pretendard 스택,
+   gray 스케일(#1F2024 / #71727A / #E5E7EB), 본문 760px 폭, 12px 라운드,
+   굵기 상한 600. 바꾼 것 = primary 블루(#3B82F6) → 솔루나 마크 색
+   (잉크 #0b1322 + 태양 #f5b840), 차가운 배경 → 따뜻한 종이톤,
+   카드/그라디언트 제거 + 행간 확대로 정보 밀도 낮춤.
+   ============================================================ */
+
+:root {
+  /* 색 — 솔루나 마크(docs/brand/soluna_mark.svg)에서 유도 */
+  --ink: #0b1322;          /* 마크 배경 = 밤 */
+  --sun: #f5b840;          /* 마크 태양 */
+  --moon: #e8edf6;         /* 마크 달빛 */
+
+  /* 색 — 오늘수업 gray 스케일 승계 */
+  --text: #454a54;
+  --text-strong: #1f2024;
+  --text-muted: #71727a;
+  --line: #e5e7eb;
+  --line-soft: #eeeff1;
+
+  --paper: #fbfaf8;        /* 따뜻한 종이톤 (오늘수업 #f8fafc의 대응) */
+  --surface: #ffffff;
+
+  --radius: 12px;
+  --measure: 42rem;        /* 본문 가독 폭 */
+  --page: 47.5rem;         /* 760px — 오늘수업 문서 폭 승계 */
+
+  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.85;       /* 한글 본문 가독 우선 */
+  letter-spacing: -0.003em;
+  word-break: keep-all;    /* 한글 어절 단위 줄바꿈 */
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 타이포 ─────────────────────────────────────────────── */
+
+h1,
+h2,
+h3 {
+  color: var(--text-strong);
+  font-weight: 600;        /* 오늘수업의 굵기 상한 600 승계 */
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.625rem;
+}
+
+h2 {
+  font-size: 1.0625rem;
+  margin-top: 2.75rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 0.9375rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+p {
+  margin: 0 0 1.15rem;
+  max-width: var(--measure);
+}
+
+ul {
+  margin: 0 0 1.15rem;
+  padding-left: 1.25rem;
+  max-width: var(--measure);
+}
+
+li {
+  margin-bottom: 0.35rem;
+}
+
+strong {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+small,
+.small {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+a {
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--sun) 70%, transparent);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1.5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: text-decoration-color 120ms ease, color 120ms ease;
+  }
+}
+
+a:hover {
+  text-decoration-color: var(--sun);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ── 레이아웃 ───────────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 var(--radius) 0;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.page {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 4rem;
+}
+
+.section {
+  padding-block: 2.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.section:first-of-type {
+  border-top: none;
+}
+
+/* 섹션 머리 라벨 — 조용한 위계 표시 */
+.eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  /* 0.06em — 라틴 라벨엔 충분하고 한글 라벨이 늘어져 보이지 않는 선 */
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+
+/* ── 브랜드 ─────────────────────────────────────────────── */
+
+.masthead {
+  padding-bottom: 1.25rem;
+}
+
+.mark {
+  display: block;
+  width: 68px;
+  height: 68px;
+}
+
+.mark--sm {
+  width: 34px;
+  height: 34px;
+}
+
+.wordmark {
+  margin: 1.5rem 0 0;
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.masthead .tagline {
+  margin: 0.6rem 0 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* 서브페이지 머리 — 랜딩으로 돌아가는 줄 */
+.pagehead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2.25rem;
+}
+
+.pagehead a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-size: 1.0625rem;
+}
+
+.pagehead a:hover .home-label {
+  text-decoration: underline;
+  text-decoration-color: var(--sun);
+  text-underline-offset: 0.25em;
+}
+
+.pagehead .doc-title {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ── 만드는 것 ──────────────────────────────────────────── */
+
+.works {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.work {
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.work:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.work__name {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+}
+
+.work__desc {
+  margin: 0.35rem 0 0;
+  color: var(--text);
+}
+
+.work__meta {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  vertical-align: 0.15em;
+}
+
+/* ── 콜로폰 (사업자 정보) ──────────────────────────────── */
+
+.colophon {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+}
+
+.colophon h2 {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.colophon dl {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+}
+
+.colophon dt {
+  color: var(--text-muted);
+}
+
+.colophon dd {
+  margin: 0;
+  color: var(--text);
+}
+
+.colophon .legal {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.colophon a {
+  color: var(--text);
+}
+
+/* ── TODO 표식 — 앱 확정 후 반드시 채울 자리 ───────────── */
+
+.todo {
+  border: 1px solid color-mix(in srgb, var(--sun) 55%, var(--line));
+  border-left: 3px solid var(--sun);
+  background: color-mix(in srgb, var(--sun) 8%, var(--surface));
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  margin: 0 0 1.15rem;
+  max-width: var(--measure);
+}
+
+.todo > :last-child {
+  margin-bottom: 0;
+}
+
+.todo__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a6100;
+  margin-bottom: 0.4rem;
+}
+
+/* ── 표 ─────────────────────────────────────────────────── */
+
+.table-wrap {
+  overflow-x: auto;
+  max-width: var(--measure);
+  margin-bottom: 1.15rem;
+}
+
+table {
+  width: 100%;
+  min-width: 22rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.6rem 0.75rem 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── 문서 메타 (시행일 등) ─────────────────────────────── */
+
+.docmeta {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  max-width: var(--measure);
+}
+
+.contact-line {
+  font-size: 1.125rem;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.1em 0.4em;
+  color: var(--text-strong);
+}
+
+/* ── 반응형 ─────────────────────────────────────────────── */
+
+@media (max-width: 30rem) {
+  body {
+    font-size: 0.9375rem;
+  }
+
+  .page {
+    padding: 2.5rem 1.25rem 3rem;
+  }
+
+  h1 {
+    font-size: 1.4375rem;
+  }
+
+  .wordmark {
+    font-size: 1.875rem;
+  }
+
+  .mark {
+    width: 56px;
+    height: 56px;
+  }
+
+  .colophon dl {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .colophon dt {
+    margin-top: 0.6rem;
+  }
+
+  .colophon dt:first-child {
+    margin-top: 0;
+  }
+
+  .pagehead {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pagehead .doc-title {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* 좁은 화면에선 표를 가로 스크롤시키지 않고 셀을 접어서 보여준다 */
+  table {
+    min-width: 0;
+  }
+
+  th,
+  td {
+    padding-right: 0.5rem;
+  }
+}
