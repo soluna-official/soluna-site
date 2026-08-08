@@ -45,24 +45,83 @@ python3 -m http.server 8000
 
 ## 배포 — Cloudflare Pages
 
-대시보드에서 진행한다.
+### 전제: 네임서버를 Cloudflare로 옮겨야 한다
 
-1. **저장소 연결** — Cloudflare Dashboard → Workers & Pages → Create → Pages →
-   Connect to Git → 이 저장소 선택
-2. **빌드 설정**
+apex 도메인(`soluna.so`)에는 DNS 표준상 CNAME을 넣을 수 없고, Cloudflare Pages는 고정 A IP를
+제공하지 않는다. 따라서 **가비아 DNS를 유지한 채로는 apex를 Pages에 연결할 수 없다.**
+Cloudflare 네임서버를 써야 CNAME flattening으로 apex가 동작한다.
+
+> 이것은 **도메인 이전(이관)이 아니다.** 도메인 등록·갱신은 계속 가비아에서 한다
+> (만료 2027-08-15). 바뀌는 것은 "DNS 질의에 누가 답하느냐"뿐이고, 무료이며 언제든 되돌릴 수 있다.
+
+**2026-08-08 기준 soluna.so 존 실측** (`dig`로 확인):
+
+| 레코드 | 값 | 비고 |
+|---|---|---|
+| NS | ns.gabia.net / ns.gabia.co.kr / ns1.gabia.co.kr | 가비아 |
+| A | **없음** | 웹이 존재한 적 없음 |
+| MX | `1 smtp.google.com` | **Google Workspace — 끊기면 안 됨** |
+| TXT | `v=spf1 include:_spf.google.com ~all` | SPF |
+| TXT | `google-site-verification=G0ae8FNJUO_bAfmHKI_kU6QFZebY5G3Oo7i__1ITCxo` | |
+| DKIM / DMARC | 미설정 | 별건 (아래 참고) |
+| DNSSEC | **미적용** | 적용돼 있었다면 NS 변경 전 해제 필요 |
+
+옮겨야 할 실제 레코드는 위 **3개(MX 1 + TXT 2)뿐**이다.
+
+### 순서 (이 순서를 지켜야 메일이 안 끊긴다)
+
+1. **Cloudflare에 존 추가** — Add a site → `soluna.so` → Free 플랜
+2. **레코드 3개를 먼저 입력** — 자동 스캔이 가져오더라도 위 표와 눈으로 대조한다.
+   ⚠️ **이 단계를 건너뛰고 4번으로 가면 `hello@soluna.so` 메일이 반송된다.**
+3. Cloudflare가 알려주는 네임서버 2개(`○○.ns.cloudflare.com`)를 받아둔다
+4. **가비아에서 네임서버 교체** — My가비아 → 도메인 관리 → soluna.so → 네임서버 설정 →
+   기존 가비아 3개를 지우고 Cloudflare 2개 입력
+5. **전파 대기** — 보통 수 분~수 시간(최대 48시간). Cloudflare 상태가 `Active`로 바뀐다.
+   전파 중에는 구/신 네임서버가 같은 답을 주므로 메일은 무중단이다.
+6. **Pages 프로젝트 생성** — Workers & Pages → Create → Pages → Connect to Git → 이 저장소
    - Framework preset: `None`
    - Build command: **비워둠** (빌드 없음)
    - Build output directory: `/`
-   - Root directory: `/` (저장소 루트에 파일이 있으므로 그대로)
-3. **배포** — Save and Deploy. `*.pages.dev` 임시 주소가 먼저 생긴다.
-4. **커스텀 도메인 연결** — 해당 Pages 프로젝트 → Custom domains → Set up a custom domain →
-   `soluna.so` 입력. `www.soluna.so`도 붙이려면 같은 화면에서 한 번 더 추가한다.
-5. **DNS** — 도메인이 이미 Cloudflare 네임서버를 쓰고 있으면 레코드가 자동 생성된다.
-   가비아 등 외부 등록기관에 있으면 안내되는 CNAME을 등록기관 DNS에 추가한다.
-6. **확인** — HTTPS 인증서 발급까지 보통 수 분. 아래 셋이 모두 200으로 열리는지 확인:
-   `https://soluna.so/`, `https://soluna.so/privacy`, `https://soluna.so/support`
+   - Root directory: `/`
+   - Save and Deploy → `*.pages.dev` 임시 주소가 먼저 생긴다
+7. **커스텀 도메인 연결** — 해당 프로젝트 → Custom domains → `soluna.so` 추가.
+   `www.soluna.so`도 붙이려면 한 번 더 추가한다. 존이 Cloudflare에 있으므로 레코드는 자동 생성된다.
+8. **확인** — 인증서 발급까지 보통 수 분.
+   ```bash
+   dig +short NS soluna.so          # Cloudflare 네임서버로 바뀌었는지
+   dig +short MX soluna.so          # 1 smtp.google.com 이 그대로 나오는지
+   curl -sI https://soluna.so/         | head -1
+   curl -sI https://soluna.so/privacy  | head -1
+   curl -sI https://soluna.so/support  | head -1
+   ```
+   그리고 **외부 메일 주소에서 `hello@soluna.so`로 실제 발송 테스트**를 반드시 한다.
+   D&B 연락이 이 주소로 오므로 이 검증을 건너뛰면 안 된다.
 
 이후 `main` 브랜치에 push하면 자동 재배포된다.
+
+### 되돌리기
+
+가비아에서 네임서버를 원래 3개로 다시 넣으면 끝이다. 도메인 이전과 달리 잠금도 대기 기간도 없다.
+
+### 대안 — GitHub Pages (네임서버를 안 건드리는 경우)
+
+apex를 A 레코드로 지원하므로 가비아 DNS를 그대로 두고 붙일 수 있다(= 메일 리스크 0).
+대신 무료 계정은 저장소가 공개여야 하고, 리다이렉트·헤더 제어가 약하다.
+GitHub이 안내하는 apex용 A 레코드 4개 + `www` CNAME을 가비아에 추가하는 방식이다.
+
+### 하지 말 것 — 기존 애플리케이션 서버에 얹기
+
+기술적으로 가능하지만 권하지 않는다. privacy·support URL은 앱이 스토어에 올라가 있는
+**내내** 살아 있어야 하는데, 앱 서버에 묶으면 배포 재시작·장애·인증서 갱신 실패가
+그대로 심사 URL 장애가 된다. 별도 인증서를 직접 관리해야 하는 부담도 생긴다.
+
+(검토 근거와 서버 설정별 주의사항은 oneulclass 저장소의 운영 문서에 정리해 둔다.)
+
+## 참고 — DKIM / DMARC 미설정 (별건)
+
+현재 soluna.so에 DKIM·DMARC가 없다. 필수는 아니지만, D&B·스토어와 주고받는 메일이
+스팸으로 분류될 확률을 줄이려면 DNS를 만지는 김에 Google Workspace에서 DKIM을 켜고
+DMARC TXT를 추가해두는 것이 좋다.
 
 ## 앱 출시 전 반드시 처리할 것 (TODO)
 
