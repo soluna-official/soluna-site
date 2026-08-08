@@ -32,7 +32,8 @@
 soluna-site/
 ├── index.html     랜딩 (소개 · 만드는 것 · 연락처 · 사업자 정보)
 ├── privacy.html   개인정보처리방침  → /privacy 로 서비스됨
-├── support.html   앱 지원           → /support 로 서비스됨
+├── support.html   앱 지원           → /support
+├── 404.html       존재하지 않는 경로 (Pages가 404 상태로 자동 서빙) 로 서비스됨
 ├── styles.css     공통 스타일 (색 토큰 · 타이포 · 레이아웃)
 ├── favicon.svg    솔루나 마크 (sol + luna 일식)
 ├── CLAUDE.md      AI 어시스턴트 가이드 (공개 저장소 규칙 · 구조 · 디자인)
