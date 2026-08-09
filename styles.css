@@ -198,6 +198,145 @@ a:hover {
   margin: 0.4rem 0 0.85rem;  /* 본문 첫 줄과 시각적으로 맞춤 */
 }
 
+/* ── 상단 네비게이션 (스크롤 시 고정) ─────────────────── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--ink);
+  border-bottom: 1px solid color-mix(in srgb, var(--moon) 12%, transparent);
+}
+
+.nav__inner {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav__brand .mark {
+  width: 26px;
+  height: 26px;
+}
+
+.nav__brand .wordmark {
+  font-size: 1.125rem;
+  letter-spacing: -0.04em;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: 0.5rem;
+}
+
+.nav__links a {
+  color: color-mix(in srgb, var(--moon) 72%, transparent);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.nav__links a:hover {
+  color: #fff;
+}
+
+.nav__cta {
+  margin-left: auto;
+}
+
+/* ── 버튼 ───────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.35rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn {
+    transition: background-color 130ms ease, border-color 130ms ease, color 130ms ease;
+  }
+}
+
+/* 주 버튼 — 마크의 태양색 */
+.btn--primary {
+  background: var(--sun);
+  color: var(--ink);
+}
+
+.btn--primary:hover {
+  background: color-mix(in srgb, var(--sun) 82%, #fff);
+}
+
+/* 어두운 배경 위의 보조 버튼 */
+.btn--ghost {
+  background: transparent;
+  color: var(--moon);
+  border-color: color-mix(in srgb, var(--moon) 32%, transparent);
+}
+
+.btn--ghost:hover {
+  border-color: var(--moon);
+  color: #fff;
+}
+
+/* 밝은 배경 위의 작은 버튼 (제품 카드용) */
+.btn--sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+  border-radius: 7px;
+}
+
+.btn--outline {
+  background: var(--surface);
+  color: var(--text-strong);
+  border-color: var(--line);
+}
+
+.btn--outline:hover {
+  border-color: var(--ink);
+}
+
+/* 네비 안의 작은 CTA */
+.nav .btn {
+  padding: 0.45rem 0.95rem;
+  font-size: 0.875rem;
+  border-radius: 7px;
+}
+
+/* 히어로 버튼 묶음 */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-left: calc(88px + 1.5rem);
+}
+
+.work__cta {
+  margin-top: 0.9rem;
+}
+
 /* ── 브랜드 밴드 (전면 잉크 배경) ──────────────────────── */
 
 .band {
@@ -243,47 +382,6 @@ a:hover {
   padding-left: calc(88px + 1.5rem); /* 워드마크 왼쪽 라인에 맞춤 */
   color: color-mix(in srgb, var(--moon) 62%, transparent);
   font-size: 1.0625rem;
-}
-
-/* 서브페이지용 압축 밴드 */
-.band--compact .band__inner {
-  padding: 1.5rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.band--compact .home {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  text-decoration: none;
-  color: #fff;
-}
-
-.band--compact .mark {
-  width: 34px;
-  height: 34px;
-}
-
-.band--compact .wordmark {
-  font-size: 1.375rem;
-  letter-spacing: -0.04em;
-}
-
-.band--compact .home:hover .wordmark {
-  text-decoration: underline;
-  text-decoration-color: var(--sun);
-  text-underline-offset: 0.3em;
-  text-decoration-thickness: 1.5px;
-}
-
-.band--compact .doc-title {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  color: color-mix(in srgb, var(--moon) 55%, transparent);
 }
 
 .band :focus-visible {
@@ -509,8 +607,31 @@ code {
     grid-column: 1;
   }
 
-  .band .tagline {
+  .band .tagline,
+  .hero-actions {
     padding-left: 0;
+  }
+}
+
+/* 좁은 화면: 네비 링크를 아래로 접고 브랜드·CTA를 한 줄에 */
+@media (max-width: 34rem) {
+  .nav__inner {
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    padding: 0.6rem 1.25rem;
+  }
+
+  .nav__links {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.15rem;
+  }
+
+  .nav__links a {
+    font-size: 0.875rem;
   }
 }
 
@@ -525,10 +646,6 @@ code {
 
   .band__inner {
     padding: 3rem 1.25rem 2.75rem;
-  }
-
-  .band--compact .band__inner {
-    padding: 1.15rem 1.25rem;
   }
 
   .lockup {
@@ -548,14 +665,6 @@ code {
     height: 60px;
   }
 
-  .band--compact .mark {
-    width: 30px;
-    height: 30px;
-  }
-
-  .band--compact .wordmark {
-    font-size: 1.1875rem;
-  }
 
   .doc {
     padding-top: 2.25rem;
@@ -574,15 +683,6 @@ code {
     margin-top: 0;
   }
 
-  .band--compact .band__inner {
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .band--compact .doc-title {
-    margin-left: 0;
-    width: 100%;
-  }
 
   /* 좁은 화면에선 표를 가로 스크롤시키지 않고 셀을 접어서 보여준다 */
   table {

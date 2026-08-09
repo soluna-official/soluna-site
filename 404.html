@@ -16,9 +16,9 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="band band--compact">
-    <div class="band__inner">
-      <a class="home" href="/">
+  <nav class="nav" aria-label="주 메뉴">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="솔루나 홈">
         <svg class="mark" viewBox="0 0 512 512" role="img" aria-label="솔루나 심볼">
           <circle cx="256" cy="256" r="256" fill="#0b1322" />
           <circle cx="256" cy="256" r="150" fill="#f5b840" />
@@ -27,9 +27,14 @@
         </svg>
         <span class="wordmark">Soluna</span>
       </a>
-      <span class="doc-title">404</span>
+      <div class="nav__links">
+        <a href="/#about">소개</a>
+        <a href="/#works">제품</a>
+        <a href="/#contact">문의</a>
+      </div>
+      <a class="btn btn--primary nav__cta" href="https://oneulclass.com" rel="noopener">오늘수업 ↗</a>
     </div>
-  </header>
+  </nav>
 
   <div class="page">
     <main id="main" class="doc">
