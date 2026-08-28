@@ -47,6 +47,15 @@ git log --format=%B | grep -niE "nginx|certbot|ec2|secret|key"
 아직 push 전이면 `git commit --amend`로 히스토리까지 정리할 수 있다.
 이미 push했다면 지워도 남는다고 보고, 노출된 자격증명은 **회전(rotate)**시킨다.
 
+### 🔴 `googlefbee37bbbe2bc289.html`을 삭제하지 말 것
+
+Google Search Console 소유권 확인 파일이다. **Play Console 조직 계정의 웹사이트 인증이
+여기에 걸려 있다** — 지우면 소유권 확인이 풀리고 개발자 계정 인증이 깨질 수 있다.
+
+내용은 한 줄(`google-site-verification: <파일명>`)이고 사이트 어디에도 링크되지 않는다.
+쓸모없어 보여도 남겨둘 것. (2026-08-28 확인 완료 — Cloudflare Pages가 `.html`을 308로
+넘기는데도 구글이 리다이렉트를 따라가 통과했다.)
+
 ## 구조
 
 ```
