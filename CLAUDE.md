@@ -62,13 +62,16 @@ Google Search Console 소유권 확인 파일이다. **Play Console 조직 계�
 soluna-site/
 ├── index.html     랜딩
 ├── privacy.html   개인정보처리방침  → /privacy
+├── damapharm-privacy.html   담아팜(크롬 확장) 개인정보처리방침 → /damapharm-privacy (웹스토어 등록에 쓰는 URL)
 ├── support.html   앱 지원           → /support
 ├── styles.css     공통 스타일
 └── favicon.svg    솔루나 마크
 ```
 
-- 빌드가 없어 **공통 컴포넌트가 없다.** 사업자 정보는 4개 파일 푸터에 중복 기재되어 있으니
-  값을 바꿀 때는 **네 파일 모두** 고칠 것.
+- 빌드가 없어 **공통 컴포넌트가 없다.** 사업자 정보는 5개 파일 푸터에 중복 기재되어 있으니
+  값을 바꿀 때는 **다섯 파일 모두** 고칠 것.
+- `damapharm-privacy.html`은 확장의 실제 동작(서버 없음·PC 저장·로그인 정보 AES-GCM)과 일치해야 한다.
+  확장에 서버·분석 도구를 붙이면 이 문서를 **먼저** 고친다. 상세 근거는 비공개 저장소 damapharm의 `docs/`.
 
 ### 🔴 `styles.css`를 고치면 반드시 버전을 올린다
 
